@@ -133,12 +133,16 @@ typedef uint32_t utest_uint32_t;
 #define UTEST_ATTRIBUTE(a) __attribute__((a))
 #endif
 
-#if defined(_MSC_VER) || defined(__MINGW64__) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW64__) || defined(__MINGW32__) || defined(__MSYS__)
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#if defined(__MINGW64__) || defined(__MINGW32__) || defined(__MSYS__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#endif
+
+#if defined(__MSYS__)
+#include "Windows.h"
 #endif
 
 #if defined(_WINDOWS_) || defined(_WINDOWS_H)
@@ -328,7 +332,7 @@ static UTEST_INLINE void *utest_realloc(void *const pointer, size_t new_size) {
 }
 
 static UTEST_INLINE utest_int64_t utest_ns(void) {
-#if defined(_MSC_VER) || defined(__MINGW64__) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW64__) || defined(__MINGW32__) || defined(__MSYS__)
   utest_large_integer counter;
   utest_large_integer frequency;
   QueryPerformanceCounter(&counter);
@@ -381,7 +385,7 @@ UTEST_EXTERN struct utest_state_s utest_state;
 
 #if defined(_MSC_VER)
 #define UTEST_WEAK __forceinline
-#elif defined(__MINGW32__) || defined(__MINGW64__)
+#elif defined(__MINGW32__) || defined(__MINGW64__) || defined(__MSYS__)
 #define UTEST_WEAK static UTEST_ATTRIBUTE(used)
 #elif defined(__clang__) || defined(__GNUC__) || defined(__TINYC__)
 #define UTEST_WEAK UTEST_ATTRIBUTE(weak)
